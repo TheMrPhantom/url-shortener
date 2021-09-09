@@ -25,12 +25,11 @@ const LinkTableEntryAdd = ({ apiPost, snackbar }) => {
             seturl("")
         } else if (resp.code === 409) {
             snackbar("Short name already exists", "error")
-            setbuttonDisabled(false)
         }
         else {
             snackbar("Something went wrong", "error")
-            setbuttonDisabled(false)
         }
+        setbuttonDisabled(false)
     }
 
     return (
