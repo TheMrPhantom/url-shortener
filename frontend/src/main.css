@@ -3,3 +3,9 @@
     flex-direction: column;
     align-items: center;
 }
+
+.headerButton{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

@@ -42,38 +42,51 @@ def logout():
 
 
 @app.route('/authenticated', methods=["GET"])
-#@authenticated
+@authenticated
 def is_authenticated():
     return util.build_response("OK")
 
 
 @app.route('/links', methods=["GET"])
 def get_Links():
-    links=database_manager.load_links()
+    links = database_manager.load_links()
     return util.build_response(database_manager.load_links())
 
 
 @app.route('/links/add', methods=["POST"])
-#@authenticated
+@authenticated
 def add_Links():
-    database_manager.store_links(request.json["shortname"], request.json["url"])
-    return util.build_response("OK")
+    shortname = str(request.json["shortname"])
+    url = str(request.json["url"])
+    if not url.startswith("http"):
+        url = "https://"+url
+    sucess=database_manager.store_links(shortname, url)
+
+    if sucess:
+        return util.build_response("OK")
+    else:
+        return util.build_response("Redirect already exist",code=409)
 
 
 @app.route('/links/remove', methods=["POST"])
-#@authenticated
+@authenticated
 def remove_Links():
     database_manager.remove_links(request.json["id"])
     return util.build_response("OK")
+
 
 @app.route('/favicon.ico', methods=["GET"])
 def icon():
     return util.build_response("OK")
 
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def get_dir(path):
-    url=database_manager.load_and_increment_link(path)
+    url = database_manager.load_and_increment_link(path)
+    if not url:
+        return util.build_response(f"Redirect {path} not found", code=404)
     return redirect(url)
 
-app.run("127.0.0.1", threaded=True)
+
+app.run("0.0.0.0", threaded=True)

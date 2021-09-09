@@ -23,11 +23,17 @@ class SQLiteWrapper:
 
     def store_links(self, shortname, url):
         con = sqlite3.connect(self.db_name)
-        con.cursor().execute('''INSERT INTO links values (?, ?, 0)''',
-                             (shortname, url))
-
-        con.commit()
+        output = None
+        for link in con.cursor().execute('''SELECT rowid, url, clicks FROM links WHERE shortname=?;''', (shortname,)):
+            output = link
+        
+        if not output:
+            con.cursor().execute('''INSERT INTO links values (?, ?, 0)''',
+                                (shortname, url))
+            con.commit()
         con.close()
+
+        return not output
 
     def load_links(self):
         con = sqlite3.connect(self.db_name)
@@ -39,16 +45,20 @@ class SQLiteWrapper:
 
     def load_and_increment_link(self, shortname):
         con = sqlite3.connect(self.db_name)
-        output = ""
+        output = None
+        url=None
         for link in con.cursor().execute('''SELECT rowid, url, clicks FROM links WHERE shortname=?;''', (shortname,)):
             output = link
-        rowid=output[0]
-        url=output[1]
-        clicks = output[2]
-        clicks += 1
+        
+        if output:
+            rowid=output[0]
+            url=output[1]
+            clicks = output[2]
+            clicks += 1
 
-        con.cursor().execute('''UPDATE links SET clicks=? WHERE ROWID=?''', (clicks,rowid,))
-        con.commit()
+            con.cursor().execute('''UPDATE links SET clicks=? WHERE ROWID=?''', (clicks,rowid,))
+            con.commit()
+
         con.close()
 
         return url

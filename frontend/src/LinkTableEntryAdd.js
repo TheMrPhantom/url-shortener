@@ -13,15 +13,23 @@ const LinkTableEntryAdd = ({ apiPost, snackbar }) => {
     const [buttonDisabled, setbuttonDisabled] = useState(false)
 
     const handleAddClick = async () => {
+        if (shortname === "" || url === "") {
+            snackbar("Fill out all inputs!", "error")
+            return
+        }
         setbuttonDisabled(true)
         const resp = await apiPost("links/add", { shortname: shortname, url: url })
         if (resp.code === 200) {
             snackbar("Redirect added", "success")
             setshortname("")
             seturl("")
+        } else if (resp.code === 409) {
+            snackbar("Short name already exists", "error")
             setbuttonDisabled(false)
-        } else {
+        }
+        else {
             snackbar("Something went wrong", "error")
+            setbuttonDisabled(false)
         }
     }
 
@@ -29,14 +37,18 @@ const LinkTableEntryAdd = ({ apiPost, snackbar }) => {
 
         <TableRow>
             <TableCell >  <TextField style={{ width: "100%" }} id="" label="Short Name" type="input" value={shortname} onChange={event => setshortname(event.target.value)} /></TableCell>
-            <TableCell > <TextField style={{ width: "100%" }} label="URL" type="input" value={url} onChange={event => seturl(event.target.value)} /></TableCell>
+            <TableCell >
+                <form action="" noValidate autoComplete="off" onSubmit={(event) =>{event.preventDefault(); handleAddClick()}}>
+                    <TextField style={{ width: "100%" }} label="URL" type="input" value={url} onChange={event => seturl(event.target.value)} onsub />
+                </form>
+            </TableCell>
             <TableCell ></TableCell>
             <TableCell style={{ width: "70px" }}>
-                {!buttonDisabled?
-                <Button onClick={() => handleAddClick()}>
-                    <AddBoxIcon style={{ color: "#8bc34a" }} />
-                </Button>
-                :""}
+                {!buttonDisabled ?
+                    <Button onClick={() => handleAddClick()}>
+                        <AddBoxIcon style={{ color: "#8bc34a" }} />
+                    </Button>
+                    : ""}
             </TableCell>
         </TableRow>
 

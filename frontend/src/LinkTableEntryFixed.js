@@ -3,6 +3,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox';
 import Button from '@material-ui/core/Button';
+import ExternalLink from './ExternalLink';
 import { useState } from 'react';
 
 const LinkTableEntryFixed = ({ id, short, url, clicks, apiPost, snackbar }) => {
@@ -13,7 +14,7 @@ const LinkTableEntryFixed = ({ id, short, url, clicks, apiPost, snackbar }) => {
         setbuttonDisabled(true)
         const resp = await apiPost("links/remove", { id: id })
         if (resp.code === 200) {
-            snackbar("Redirect added", "success")
+            snackbar("Redirect removed", "success")
         } else {
             snackbar("Something went wrong", "error")
             setbuttonDisabled(false)
@@ -23,7 +24,7 @@ const LinkTableEntryFixed = ({ id, short, url, clicks, apiPost, snackbar }) => {
 
     return (
         <TableRow className="examitem" >
-            <TableCell > {short}</TableCell>
+            <TableCell > <ExternalLink text={short} url={"https://s.fg-inf.de/"+short}/></TableCell>
             <TableCell >{url}</TableCell>
             <TableCell >{clicks}</TableCell>
             <TableCell style={{ width: "70px" }}>

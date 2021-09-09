@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Login = ({ onLogIn, snackbar,baseUrl }) => {
+const Login = ({ domain, onLogIn, snackbar,baseUrl }) => {
     const classes = useStyles();
 
     const [password, setPassword] = useState("")
@@ -31,7 +31,7 @@ const Login = ({ onLogIn, snackbar,baseUrl }) => {
 
     const getToken = async (password) => {
         console.log("/create/token")
-        const resp = await fetch("/create/token",
+        const resp = await fetch(domain+"/create/token",
             {
                 credentials: 'include',
                 method: "POST",

@@ -13,6 +13,8 @@ function App() {
   const [snackbarText, setSnackbarText] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+  const domain="https://s.fg-inf.de/";
+
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
@@ -44,7 +46,7 @@ function App() {
   };
 
   const fetchAPI_GET = async (url) => {
-    const userInput = await fetch("http://localhost:5000/" + url,
+    const userInput = await fetch(domain + url,
       {
         credentials: 'include',
         method: "GET",
@@ -70,7 +72,7 @@ function App() {
 
   const fetchAPI_POST = async (url, body) => {
 
-    const resp = await fetch("http://127.0.0.1:5000/" + url,
+    const resp = await fetch(domain + url,
       {
         credentials: 'include',
         method: "POST",
@@ -91,11 +93,25 @@ function App() {
     }
   }
 
+  const logoutCallback = () => {
+    const fetch = async () => {
+      const resp = await fetchAPI_POST("logout")
+      if (resp.code === 200) {
+        setloginToken("");
+        console.log("Logged out")
+      }else{
+        openSnackbar("Logout unsuccessfull", "error")
+      }
+    }
+    fetch()
+    
+  };
+
   return (
     <div>
-      <Header />
+      <Header onLogOut={logoutCallback}/>
       {loginToken === "" ?
-        <Login snackbar={openSnackbar} onLogIn={setloginToken} />
+        <Login domain={domain} snackbar={openSnackbar} onLogIn={setloginToken} />
         :
         <LinkTable  getRequest={fetchAPI_GET} postRequest={fetchAPI_POST} snackbar={openSnackbar}/>
       }
