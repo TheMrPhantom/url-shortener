@@ -13,7 +13,7 @@ function App() {
   const [snackbarText, setSnackbarText] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const domain="https://s.fg-inf.de/";
+  const domain="https://s.fius.de/";
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;

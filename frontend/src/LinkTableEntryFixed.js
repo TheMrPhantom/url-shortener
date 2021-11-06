@@ -24,7 +24,7 @@ const LinkTableEntryFixed = ({ id, short, url, clicks, apiPost, snackbar }) => {
 
     return (
         <TableRow className="examitem" >
-            <TableCell > <ExternalLink text={short} url={"https://s.fg-inf.de/"+short}/></TableCell>
+            <TableCell > <ExternalLink text={short} url={"https://s.fius.de/"+short}/></TableCell>
             <TableCell >{url}</TableCell>
             <TableCell >{clicks}</TableCell>
             <TableCell style={{ width: "70px" }}>
